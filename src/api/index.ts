@@ -1,8 +1,6 @@
 import express from 'express';
-
+import todos from './todos/todos.route';
 import MessageResponse from '../interfaces/MessageResponse';
-import emojis from './emojis';
-
 const router = express.Router();
 
 router.get<{}, MessageResponse>('/', (req, res) => {
@@ -11,6 +9,6 @@ router.get<{}, MessageResponse>('/', (req, res) => {
   });
 });
 
-router.use('/emojis', emojis);
+router.use('/todos',todos);
 
 export default router;
