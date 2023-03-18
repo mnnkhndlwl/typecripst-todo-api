@@ -1,13 +1,41 @@
-import { Router,Response,Request } from "express";
-import {Todo,Todos, TodoWithId} from "./todos.model";
+import { Router, Response, Request } from "express";
+import { Todo, Todos, TodoWithId } from "./todos.model";
+import * as TodoHandlers from './todos.handlers';
+import { validateRequest } from "../../middlewares";
+import { ParamsWithId } from "../../interfaces/ParamsWithId";
 
 const router = Router();
 
-router.get('/', async (req : Request,res : Response<TodoWithId[]>) =>{ // response should be an array of todo items
-    const result = await Todos.find();
-    const todos = await result.toArray();
-    res.json(todos); 
-},);
+router.get('/', TodoHandlers.findAll);
+router.get(
+  '/:id',
+  validateRequest({
+    params: ParamsWithId,
+  }),
+  TodoHandlers.findOne,
+);
+router.post(
+  '/',
+  validateRequest({
+    body: Todo,
+  }),
+  TodoHandlers.createOne,
+);
+router.put(
+  '/:id',
+  validateRequest({
+    params: ParamsWithId,
+    body: Todo,
+  }),
+  TodoHandlers.updateOne,
+);
+router.delete(
+  '/:id',
+  validateRequest({
+    params: ParamsWithId,
+  }),
+  TodoHandlers.deleteOne,
+);
 
 // router.get<{},Todo[] >('/', (req,res) =>{ // we are responding with an array of TODOs
 //     res.json([
